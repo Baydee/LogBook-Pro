@@ -20,7 +20,7 @@ export default function SignUpForm() {
     setError("");
 
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -31,18 +31,32 @@ export default function SignUpForm() {
       });
 
       if (signUpError) throw signUpError;
-      alert("Check your email for the confirmation link");
+
+      console.log("Sign up successful:", data);
+
+      // Check if we have a session before navigating
+      if (data.session) {
+        navigate("/auth/onboarding");
+      } else {
+        // If no session, show a message about email confirmation if needed
+        setError(
+          "Please check your email to confirm your account before continuing.",
+        );
+        setLoading(false);
+      }
     } catch (error) {
+      console.error("Sign up error:", error);
       setError(error.message);
-    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card className="p-6 space-y-6 w-full">
+    <Card className="p-4 md:p-6 space-y-6 w-full">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Create an account</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+          Create an account
+        </h1>
         <p className="text-muted-foreground">
           Enter your details to get started
         </p>

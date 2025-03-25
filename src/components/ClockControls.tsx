@@ -58,15 +58,15 @@ const ClockControls = ({
   };
 
   return (
-    <Card className="p-6 bg-white w-[300px] h-[160px] shadow-lg">
+    <Card className="p-4 md:p-6 w-full max-w-[300px] h-[160px] shadow-lg">
       <div className="flex flex-col items-center space-y-4">
-        <div className="text-3xl font-mono font-bold text-gray-800">{time}</div>
+        <div className="text-2xl md:text-3xl font-mono font-bold">{time}</div>
 
         <div className="flex items-center space-x-4">
           {!isClocked ? (
             <Button
               variant="default"
-              className="w-32 bg-green-600 hover:bg-green-700"
+              className="w-32 bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800"
               onClick={handleClockIn}
             >
               <Play className="mr-2 h-4 w-4" />
@@ -84,7 +84,7 @@ const ClockControls = ({
           )}
         </div>
 
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground">
           {isClocked ? (
             <div className="flex items-center">
               <Timer className="mr-1 h-4 w-4 text-green-500" />

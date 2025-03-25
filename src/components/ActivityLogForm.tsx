@@ -44,24 +44,24 @@ const ActivityLogForm = ({
   if (!isOpen) return null;
 
   return (
-    <Card className="w-full max-w-3xl p-6 bg-white shadow-lg">
+    <Card className="w-full p-4 md:p-6 shadow-lg">
       <form onSubmit={handleSubmit} className="space-y-6">
         <div className="space-y-2">
           <Label htmlFor="activity">Daily Activity Log</Label>
           <Textarea
             id="activity"
             placeholder="Describe your activities for today..."
-            className="min-h-[200px]"
+            className="min-h-[150px]"
             value={activity}
             onChange={(e) => setActivity(e.target.value)}
           />
         </div>
 
-        <div className="flex items-center justify-between gap-4">
-          <div className="space-y-2">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div className="space-y-2 w-full md:w-auto">
             <Label htmlFor="summary-length">Summary Length</Label>
             <Select value={summaryLength} onValueChange={setSummaryLength}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="w-full md:w-[180px]">
                 <SelectValue placeholder="Select length" />
               </SelectTrigger>
               <SelectContent>
@@ -71,7 +71,7 @@ const ActivityLogForm = ({
               </SelectContent>
             </Select>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 mt-4 md:mt-0">
             <AudioRecorder
               onAudioSave={(audioBlob) => {
                 // Here you would typically transcribe the audio

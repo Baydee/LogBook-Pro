@@ -60,9 +60,11 @@ export default function SignInForm() {
   };
 
   return (
-    <Card className="p-6 space-y-6 w-full">
+    <Card className="p-4 md:p-6 space-y-6 w-full">
       <div className="space-y-2 text-center">
-        <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
+        <h1 className="text-xl md:text-2xl font-bold tracking-tight">
+          Welcome back
+        </h1>
         <p className="text-muted-foreground">Sign in to your account</p>
       </div>
 

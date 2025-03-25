@@ -35,7 +35,7 @@ const ActivityTracker = ({
   };
 
   return (
-    <div className="w-full max-w-[1200px] min-h-[600px] p-6 bg-gray-50 rounded-lg shadow-sm">
+    <div className="w-full max-w-[1200px] min-h-[600px] p-4 md:p-6 bg-card rounded-lg shadow-sm">
       <div className="flex flex-col items-center space-y-8">
         <div className="w-full flex justify-center">
           <ClockControls

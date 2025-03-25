@@ -1,179 +1,136 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card } from "./ui/card";
 import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { Separator } from "./ui/separator";
-import { Calendar } from "./ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { format } from "date-fns";
-import AudioRecorder from "./AudioRecorder";
-import {
-  Calendar as CalendarIcon,
-  Building2,
-  Clock,
-  CalendarRange,
-} from "lucide-react";
+import { Building2, Clock, CalendarRange } from "lucide-react";
+import { supabase } from "@/lib/supabase";
 
-interface DashboardSidebarProps {
-  workplaceDetails?: {
-    companyName: string;
-    supervisorName: string;
-    department: string;
-  };
-  schedulePreferences?: {
-    startDate: Date;
-    endDate: Date;
-    workingHours: string;
-  };
-}
+interface DashboardSidebarProps {}
 
-const DashboardSidebar = ({
-  workplaceDetails = {
-    companyName: "Tech Corp Inc.",
-    supervisorName: "John Smith",
-    department: "Software Development",
-  },
-  schedulePreferences = {
-    startDate: new Date(),
-    endDate: new Date(new Date().setMonth(new Date().getMonth() + 3)),
-    workingHours: "9:00 AM - 5:00 PM",
-  },
-}: DashboardSidebarProps) => {
-  const [startDate, setStartDate] = useState<Date>(
-    schedulePreferences.startDate,
-  );
-  const [endDate, setEndDate] = useState<Date>(schedulePreferences.endDate);
+const DashboardSidebar = ({}: DashboardSidebarProps) => {
+  const [profile, setProfile] = useState({
+    company_name: "",
+    supervisor_name: "",
+    department: "",
+    internship_start_date: new Date(),
+    internship_end_date: new Date(),
+    working_hours: "",
+  });
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) return;
+
+        const { data, error } = await supabase
+          .from("user_profiles")
+          .select("*")
+          .eq("id", user.id)
+          .single();
+
+        if (error) throw error;
+        if (data) {
+          setProfile({
+            ...data,
+            internship_start_date: new Date(data.internship_start_date),
+            internship_end_date: new Date(data.internship_end_date),
+          });
+        }
+      } catch (error) {
+        console.error("Error loading profile:", error);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   return (
-    <div className="w-[280px] h-full bg-gray-50 border-r p-4 space-y-6">
+    <div className="w-[280px] h-full bg-muted/30 border-r p-4 space-y-4 overflow-hidden">
       <Card className="p-4 space-y-4">
         <div className="flex items-center gap-2">
-          <Building2 className="h-5 w-5 text-gray-500" />
+          <Building2 className="h-5 w-5 text-muted-foreground" />
           <h3 className="font-semibold">Workplace Details</h3>
         </div>
         <Separator />
 
         <div className="space-y-3">
           <div>
-            <Label htmlFor="company">Company Name</Label>
-            <Input
-              id="company"
-              value={workplaceDetails.companyName}
-              className="mt-1"
-            />
+            <Label className="text-xs text-muted-foreground">
+              Company Name
+            </Label>
+            <p className="mt-1 text-sm font-medium">{profile.company_name}</p>
           </div>
 
           <div>
-            <Label htmlFor="supervisor">Work Supervisor Name</Label>
-            <div className="space-y-2">
-              <Input
-                id="supervisor"
-                value={workplaceDetails.supervisorName}
-                className="mt-1"
-              />
-            </div>
+            <Label className="text-xs text-muted-foreground">
+              Work Supervisor
+            </Label>
+            <p className="mt-1 text-sm font-medium">
+              {profile.supervisor_name}
+            </p>
           </div>
 
           <div>
-            <Label htmlFor="department">Department</Label>
-            <Input
-              id="department"
-              value={workplaceDetails.department}
-              className="mt-1"
-            />
+            <Label className="text-xs text-muted-foreground">Department</Label>
+            <p className="mt-1 text-sm font-medium">{profile.department}</p>
           </div>
         </div>
       </Card>
 
       <Card className="p-4 space-y-4">
         <div className="flex items-center gap-2">
-          <Clock className="h-5 w-5 text-gray-500" />
-          <h3 className="font-semibold">Schedule Preferences</h3>
+          <Clock className="h-5 w-5 text-muted-foreground" />
+          <h3 className="font-semibold">Schedule</h3>
         </div>
         <Separator />
 
         <div className="space-y-3">
           <div>
-            <Label>Internship Duration</Label>
-            <div className="space-y-2 mt-1">
-              <div>
-                <Label className="text-xs text-gray-500">Start Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal mt-1"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {format(startDate, "PPP")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={startDate}
-                      onSelect={(date) => date && setStartDate(date)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-
-              <div>
-                <Label className="text-xs text-gray-500">End Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className="w-full justify-start text-left font-normal mt-1"
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {format(endDate, "PPP")}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0">
-                    <Calendar
-                      mode="single"
-                      selected={endDate}
-                      onSelect={(date) => date && setEndDate(date)}
-                      initialFocus
-                    />
-                  </PopoverContent>
-                </Popover>
-              </div>
-            </div>
+            <Label className="text-xs text-muted-foreground">
+              Working Hours
+            </Label>
+            <p className="mt-1 text-sm font-medium">{profile.working_hours}</p>
           </div>
 
           <div>
-            <Label htmlFor="hours">Working Hours</Label>
-            <Input
-              id="hours"
-              value={schedulePreferences.workingHours}
-              className="mt-1"
-            />
+            <Label className="text-xs text-muted-foreground">Start Date</Label>
+            <p className="mt-1 text-sm font-medium">
+              {format(profile.internship_start_date, "PPP")}
+            </p>
+          </div>
+
+          <div>
+            <Label className="text-xs text-muted-foreground">End Date</Label>
+            <p className="mt-1 text-sm font-medium">
+              {format(profile.internship_end_date, "PPP")}
+            </p>
           </div>
         </div>
       </Card>
 
       <Card className="p-4">
         <div className="flex items-center gap-2 mb-4">
-          <CalendarRange className="h-5 w-5 text-gray-500" />
+          <CalendarRange className="h-5 w-5 text-muted-foreground" />
           <h3 className="font-semibold">Duration Overview</h3>
         </div>
         <Separator className="mb-4" />
-        <div className="text-sm text-gray-600 space-y-2">
+        <div className="text-sm text-muted-foreground space-y-2">
           <p>
             Total Weeks:{" "}
             {Math.ceil(
-              (endDate.getTime() - startDate.getTime()) /
+              (profile.internship_end_date.getTime() -
+                profile.internship_start_date.getTime()) /
                 (1000 * 60 * 60 * 24 * 7),
             )}
           </p>
           <p>
             Days Remaining:{" "}
             {Math.ceil(
-              (endDate.getTime() - new Date().getTime()) /
+              (profile.internship_end_date.getTime() - new Date().getTime()) /
                 (1000 * 60 * 60 * 24),
             )}
           </p>

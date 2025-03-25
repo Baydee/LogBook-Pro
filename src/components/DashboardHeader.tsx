@@ -10,6 +10,8 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Settings, LogOut, Bell } from "lucide-react";
+import ThemeToggle from "./ThemeToggle";
+import Logo from "./Logo";
 
 interface DashboardHeaderProps {
   userName?: string;
@@ -27,12 +29,14 @@ const DashboardHeader = ({
   onSettings = () => {},
 }: DashboardHeaderProps) => {
   return (
-    <header className="w-full h-[72px] px-6 border-b bg-white flex items-center justify-between">
+    <header className="w-full h-[72px] px-6 border-b bg-background flex items-center justify-between">
       <div className="flex items-center space-x-4">
-        <h1 className="text-xl font-semibold text-gray-900">LogBook Pro</h1>
+        <Logo />
       </div>
 
       <div className="flex items-center space-x-4">
+        <ThemeToggle />
+
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="h-5 w-5" />
           <span className="absolute top-0 right-0 h-2 w-2 bg-red-500 rounded-full" />
