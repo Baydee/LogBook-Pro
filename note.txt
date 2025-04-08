@@ -1,0 +1,315 @@
+import { useState } from "react";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+
+interface CollegeOnboardingFormProps {
+  userId: string;
+}
+
+export default function CollegeOnboardingForm({
+  userId,
+}: CollegeOnboardingFormProps) {
+  const [formData, setFormData] = useState({
+    collegeName: "",
+    studentId: "",
+    program: "",
+    major: "",
+    academicYear: "",
+    semester: "fall",
+    advisorName: "",
+    advisorEmail: "",
+    creditsRequired: "",
+    graduationDate: "",
+  });
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSelectChange = (name: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("College form submitted:", { userId, ...formData });
+    // Here you would typically send this data to your backend
+  };
+
+  return (
+    <Card className="w-[600px] max-w-full">
+      <CardHeader>
+        <CardTitle>College Information</CardTitle>
+        <CardDescription>
+          Please provide details about your academic institution and program
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="collegeName">College/University Name</Label>
+            <Input
+              id="collegeName"
+              name="collegeName"
+              value={formData.collegeName}
+              onChange={handleChange}
+              placeholder="University of Example"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="studentId">Student ID</Label>
+              <Input
+                id="studentId"
+                name="studentId"
+                value={formData.studentId}
+                onChange={handleChange}
+                placeholder="S12345678"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="program">Degree Program</Label>
+              <Select
+                value={formData.program}
+                onValueChange={(value) => handleSelectChange("program", value)}
+              >
+                <SelectTrigger id="program">
+                  <SelectValue placeholder="Select program" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="associate">Associate's Degree</SelectItem>
+                  <SelectItem value="bachelor">Bachelor's Degree</SelectItem>
+                  <SelectItem value="master">Master's Degree</SelectItem>
+                  <SelectItem value="doctorate">Doctorate</SelectItem>
+                  <SelectItem value="certificate">
+                    Certificate Program
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="major">Major/Field of Study</Label>
+              <Input
+                id="major"
+                name="major"
+                value={formData.major}
+                onChange={handleChange}
+                placeholder="Computer Science"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="academicYear">Current Academic Year</Label>
+              <Select
+                value={formData.academicYear}
+                onValueChange={(value) =>
+                  handleSelectChange("academicYear", value)
+                }
+              >
+                <SelectTrigger id="academicYear">
+                  <SelectValue placeholder="Select year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="freshman">Freshman (1st Year)</SelectItem>
+                  <SelectItem value="sophomore">
+                    Sophomore (2nd Year)
+                  </SelectItem>
+                  <SelectItem value="junior">Junior (3rd Year)</SelectItem>
+                  <SelectItem value="senior">Senior (4th Year)</SelectItem>
+                  <SelectItem value="graduate">Graduate Student</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="semester">Current Semester</Label>
+              <Select
+                value={formData.semester}
+                onValueChange={(value) => handleSelectChange("semester", value)}
+              >
+                <SelectTrigger id="semester">
+                  <SelectValue placeholder="Select semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="fall">Fall</SelectItem>
+                  <SelectItem value="spring">Spring</SelectItem>
+                  <SelectItem value="summer">Summer</SelectItem>
+                  <SelectItem value="winter">Winter</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="creditsRequired">
+                Credits Required for Internship
+              </Label>
+              <Input
+                id="creditsRequired"
+                name="creditsRequired"
+                type="number"
+                value={formData.creditsRequired}
+                onChange={handleChange}
+                placeholder="3"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="advisorName">Academic Advisor Name</Label>
+              <Input
+                id="advisorName"
+                name="advisorName"
+                value={formData.advisorName}
+                onChange={handleChange}
+                placeholder="Dr. Jane Smith"
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="advisorEmail">Academic Advisor Email</Label>
+              <Input
+                id="advisorEmail"
+                name="advisorEmail"
+                type="email"
+                value={formData.advisorEmail}
+                onChange={handleChange}
+                placeholder="advisor@university.edu"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="graduationDate">Expected Graduation Date</Label>
+            <Input
+              id="graduationDate"
+              name="graduationDate"
+              type="date"
+              value={formData.graduationDate}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </form>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={handleSubmit} className="w-full">
+          Submit College Information
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
+
+
+import { useState } from "react";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { Label } from "../ui/label";
+
+type Role = "student" | "supervisor" | "admin";
+
+interface RoleSelectionProps {
+  onRoleSelect: (role: Role) => void;
+  selectedRole?: Role;
+}
+
+export default function RoleSelection({
+  onRoleSelect,
+  selectedRole = "student",
+}: RoleSelectionProps) {
+  const [role, setRole] = useState<Role>(selectedRole);
+
+  const handleRoleChange = (value: string) => {
+    setRole(value as Role);
+  };
+
+  const handleSubmit = () => {
+    onRoleSelect(role);
+  };
+
+  return (
+    <Card className="w-[400px] max-w-full">
+      <CardHeader>
+        <CardTitle>Select Your Role</CardTitle>
+        <CardDescription>
+          Choose the role that best describes your position in the internship
+          program
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <RadioGroup
+          value={role}
+          onValueChange={handleRoleChange}
+          className="space-y-4"
+        >
+          <div className="flex items-center space-x-2 border p-4 rounded-md hover:bg-muted/50 cursor-pointer">
+            <RadioGroupItem value="student" id="student" />
+            <Label
+              htmlFor="student"
+              className="flex-1 cursor-pointer font-medium"
+            >
+              Student
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2 border p-4 rounded-md hover:bg-muted/50 cursor-pointer">
+            <RadioGroupItem value="supervisor" id="supervisor" />
+            <Label
+              htmlFor="supervisor"
+              className="flex-1 cursor-pointer font-medium"
+            >
+              Supervisor
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2 border p-4 rounded-md hover:bg-muted/50 cursor-pointer">
+            <RadioGroupItem value="admin" id="admin" />
+            <Label
+              htmlFor="admin"
+              className="flex-1 cursor-pointer font-medium"
+            >
+              Administrator
+            </Label>
+          </div>
+        </RadioGroup>
+      </CardContent>
+      <CardFooter>
+        <Button onClick={handleSubmit} className="w-full">
+          Continue
+        </Button>
+      </CardFooter>
+    </Card>
+  );
+}
